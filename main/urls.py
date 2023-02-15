@@ -12,6 +12,4 @@ urlpatterns = [
     path('addproducto/', AddProducto.as_view(), name='add_product'),
     path('add_imagen/<int:pk>/', upload_images, name='add_imagen'),
     path('Logout/', LogoutUser.as_view(), name='logout'),
-    path('edo/', EDO.as_view(), name='EDO'),
-    path('calcular/', calcular, name='calcular'),
 ]

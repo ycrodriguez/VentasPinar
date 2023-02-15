@@ -8,7 +8,7 @@ from .form.producto import ProductoForm
 from .form.imagen import ImagenForm
 from .form.user import UserForm
 from .form.contact import FormContact
-from main.models import Producto, Imagen, MyContact, Iteraciones
+from main.models import Producto, Imagen, MyContact
 
 
 class LoginPage(ListView, CreateView):
@@ -108,96 +108,6 @@ class AddProducto(ListView, CreateView):
             return redirect('add_imagen', pk=obj.pk)
         producto = ProductoForm()
         return render(request, 'add_producto.html', {'producto': producto})
-
-
-class EDO(ListView, CreateView):
-    def get(self, request, *args, **kwargs):
-        ite = Iteraciones.objects.all()
-        return render(request, 'EDO.html', {'ite': ite})
-
-
-class EcuacionDiferencial():
-    def __init__(self, xf, h):
-        self.xn = []
-        self.yn = []
-        # TODO: dominio del calculo de xn[0] hasta xf
-        self.xf = xf
-        # TODO: paso
-        self.h = h
-
-    def f(self, x, y):
-        return x - y
-
-    def metodoEuler(self, ci, cf):
-        self.xn.append(ci)
-        self.yn.append(cf)
-        array = []
-        n = 0
-        while self.xn[n] < self.xf:
-            x = self.xn[n] + self.h
-            self.xn.append(x)
-            y = self.yn[n] + self.h * self.f(self.xn[n], self.yn[n])
-            self.yn.append(y)
-            n += 1
-        array.append(self.xn)
-        array.append(self.yn)
-        return array
-
-    def RK2(self, ci, cf):
-        self.xn.append(ci)
-        self.yn.append(cf)
-        array = []
-
-        n = 0
-        while self.xn[n] < self.xf:
-            k1 = self.h * self.f(self.xn[n], self.yn[n])
-            k2 = self.h * self.f(self.xn[n] + self.h, self.yn[n] + k1)
-            y = self.yn[n] + 0.5 * (k1 + k2)
-            self.yn.append(y)
-            x = self.xn[n] + self.h
-            self.xn.append(x)
-            n += 1
-        array.append(self.xn)
-        array.append(self.yn)
-        return array
-
-    def RK4(self, ci, cf):
-        self.xn.append(ci)
-        self.yn.append(cf)
-        array = []
-
-        n = 0
-        while self.xn[n] < self.xf:
-            k1 = self.h * self.f(self.xn[n], self.yn[n])
-            k2 = self.h * self.f(self.xn[n] + 1 / 2 * self.h, self.yn[n] + 1 / 2 * k1)
-            k3 = self.h * self.f(self.xn[n] + 1 / 2 * self.h, self.yn[n] + 1 / 2 * k2)
-            k4 = self.h * self.f(self.xn[n] + self.h, self.yn[n] + k3)
-            y = self.yn[n] + 1 / 6 * (k1 + 2 * k2 + 2 * k3 + k4)
-            self.yn.append(y)
-            x = self.xn[n] + self.h
-            self.xn.append(x)
-            n += 1
-        array.append(self.xn)
-        array.append(self.yn)
-        return array
-
-
-def calcular(request):
-    ed = EcuacionDiferencial(4, 0.1)
-    array = ed.RK4(0, 0.5)
-    array_x = array[0]
-    array_y = array[1]
-    ite = Iteraciones.objects.all()
-    if ite:
-        obj = Iteraciones.objects.all()
-        obj.delete()
-        for i in range(0, len(array[0]) - 1):
-            Iteraciones.objects.create(n=i, xn=array_x[i], yn=array_y[i])
-    else:
-        for i in range(0, len(array[0]) - 1):
-            Iteraciones.objects.create(n=i, xn=array_x[i], yn=array_y[i])
-    ite = Iteraciones.objects.all()
-    return render(request, 'EDO.html', {'ite': ite})
 
 
 def upload_images(request, pk):
