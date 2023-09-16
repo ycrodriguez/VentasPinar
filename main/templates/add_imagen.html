@@ -3,12 +3,6 @@
 {% block content %}
     <h3 class="container, text-center">Adicionar Imagen</h3>
     <div class="container">
-        {#        {% for a in array %}#}
-        {#            <img style="height: 100px;width: 200px" src="{{ a.iamgen.url }}"/>#}
-        {#            {% if forloop.counter|divisibleby:3 %}#}
-        {#                <br>#}
-        {#            {% endif %}#}
-        {#        {% endfor %}#}
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div>

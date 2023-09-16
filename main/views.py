@@ -1,4 +1,3 @@
-from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, CreateView
 from django.contrib.auth.forms import UserCreationForm
